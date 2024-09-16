@@ -1,0 +1,17 @@
+{
+  "name": "@rapid/libs-web",
+  "version": "1.0.0",
+  "description": "",
+  "source": "./index.ts",
+  "main": "./index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@rapid/validates": "workspace:^",
+    "ahooks": "^3.8.1"
+  }
+}

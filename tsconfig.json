@@ -1,0 +1,55 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "incremental": true,
+    "baseUrl": ".",
+
+    "skipLibCheck": true,
+
+    "jsx": "react-jsx",
+    "lib": ["DOM", "ESNext"],
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+
+    "esModuleInterop": true,
+    "isolatedModules": true,
+
+    "strict": false,
+    "strictNullChecks": true,
+
+    "experimentalDecorators": true,
+
+    "noEmitOnError": true,
+    "noUnusedParameters": false,
+    "noImplicitAny": false,
+
+    "allowSyntheticDefaultImports": true,
+    "allowUmdGlobalAccess": true,
+    "allowArbitraryExtensions": true,
+    "allowUnusedLabels": true,
+
+    "types": [
+      "./src/@types",
+      "./src/libs/@types"
+    ],
+
+    "paths": {
+      "@components/*": ["src/components/*"],
+      "@router/*": ["src/router/*"],
+      "@pages/*": ["src/pages/*"],
+      "@libs/*": ["src/libs/*"],
+      "@scss/*": ["src/scss/*"],
+      "@/*": ["src/*"]
+    }
+  },
+  "include": [
+    "./src/**/*.ts",
+    "./src/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/node_modules/*"
+  ]
+}
