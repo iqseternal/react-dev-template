@@ -1,7 +1,7 @@
 import { RSA_PUBLIC_KEY } from '@/secure';
-import { rsaEncryptAlgorithm } from '@suey/pkg-utils';
-import { rApiPost } from './declare';
-import type { RApiPromiseLike } from './declare';
+import { isUnDef, rsaEncryptAlgorithm } from '@suey/pkg-utils';
+import { apiPost } from './declare';
+import type { ApiPromiseLike } from './declare';
 
 // ==================================================================================
 
@@ -16,9 +16,32 @@ export interface LoginReqPayload {
   username: string;
   password: string;
 }
-export type LoginReqPromise = RApiPromiseLike<LoginResponse, null>;
+export type LoginReqPromise = ApiPromiseLike<LoginResponse, null>;
 export const loginReq = (payload: LoginReqPayload) => {
-  return rApiPost<LoginResponse, {}>('/user/login', {
+
+  return new Promise<LoginResponse>((resolve, reject) => {
+    if (isUnDef(payload.username) || isUnDef(payload.password)) return reject({
+      data: {
+        userinfo: {
+          id: null,
+          token: null
+        }
+      }
+    })
+
+    return resolve({
+      data: {
+        userinfo: {
+          id: 23,
+          token: 'asdsadewrfewrexxxawe'
+        }
+      }
+    } as any)
+  }) as unknown as ApiPromiseLike<LoginResponse, LoginResponse>;
+
+
+
+  return apiPost<LoginResponse, {}>('/user/login', {
     hConfig: {
       needAuth: false
     },
@@ -46,9 +69,9 @@ export type UserinfoResponse = Partial<{
   phone: string;
   address: string;
 }>;
-export type GetUserinfoReqPromise = RApiPromiseLike<UserinfoResponse>;
+export type GetUserinfoReqPromise = ApiPromiseLike<UserinfoResponse>;
 export const getUserinfoReq = () => {
-  return rApiPost<UserinfoResponse>('/user/getUserinfo', {
+  return apiPost<UserinfoResponse>('/user/getUserinfo', {
 
   });
 }
@@ -60,12 +83,12 @@ export type RegisterSuccessResponse = {
 
 }
 export const registerReq = () => {
-  return rApiPost<RegisterSuccessResponse, null>('/user/register', {
+  return apiPost<RegisterSuccessResponse, null>('/user/register', {
 
   })
 }
 
 
 export const logoutReq = () => {
-  return rApiPost<null, null>('/user/logout');
+  return apiPost<null, null>('/user/logout');
 }

@@ -11,9 +11,7 @@ const RootLayout = () => {
   const hasAuthorizeState = useAuthHasAuthorized();
 
   return <GuardsContext.Authorized.Provider value={hasAuthorizeState}>
-    <FullSize>
-      <Outlet />
-    </FullSize>
+    <Outlet />
   </GuardsContext.Authorized.Provider>
 }
 

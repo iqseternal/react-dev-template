@@ -7,7 +7,7 @@ export type { RequestConfig, Interceptors } from '@suey/pkg-utils';
 export { REQ_METHODS, createApiRequest, createRequest } from '@suey/pkg-utils';
 
 /** 请求 hConfig 配置 */
-export interface RApiHConfig {
+export interface ApiHConfig {
   /**
    * 默认都需要认证
    * @default true
@@ -16,7 +16,7 @@ export interface RApiHConfig {
 }
 
 /** 基本响应结构体的内容 */
-export interface RApiBasicResponse {
+export interface ApiBasicResponse {
   status: number;
   flag: string;
   data: any;
@@ -26,19 +26,19 @@ export interface RApiBasicResponse {
   descriptor: string;
   _t: number;
 }
-export interface RApiSuccessResponse extends RApiBasicResponse {
+export interface ApiSuccessResponse extends ApiBasicResponse {
   flag: 'ApiResponseOk';
 }
-export interface RApiFailResponse extends RApiBasicResponse {
+export interface ApiFailResponse extends ApiBasicResponse {
   flag: 'ApiResponseFal';
 
   /** 更多的错误信息 */
   INNER: {
     stack: string;
-    name: AxiosError<Omit<RApiFailResponse, 'INNER'>, any>['name'];
-    config: AxiosError<Omit<RApiFailResponse, 'INNER'>, any>['config'];
-    request: AxiosError<Omit<RApiFailResponse, 'INNER'>, any>['request'];
-    response: AxiosError<Omit<RApiFailResponse, 'INNER'>, any>['response'];
+    name: AxiosError<Omit<ApiFailResponse, 'INNER'>, any>['name'];
+    config: AxiosError<Omit<ApiFailResponse, 'INNER'>, any>['config'];
+    request: AxiosError<Omit<ApiFailResponse, 'INNER'>, any>['request'];
+    response: AxiosError<Omit<ApiFailResponse, 'INNER'>, any>['response'];
   }
 }
 
@@ -57,10 +57,10 @@ export interface RApiFailResponse extends RApiBasicResponse {
  * //
  * ```
  */
-export type RApiPromiseLike<Success, Fail = {}> = ApiPromiseResultTypeBuilder<RApiSuccessResponse, RApiFailResponse, Success, Fail>;
+export type ApiPromiseLike<Success, Fail = {}> = ApiPromiseResultTypeBuilder<ApiSuccessResponse, ApiFailResponse, Success, Fail>;
 
 
-export const rApi = createApiRequest<RApiHConfig, RApiSuccessResponse, RApiFailResponse>('http://oupro.cn/api/v1.0.0/', {
+export const { apiGet, apiPost, request, createApi } = createApiRequest<ApiHConfig, ApiSuccessResponse, ApiFailResponse>('http://oupro.cn/api/v1.0.0/', {
   timeout: 5000
 }, {
   async onFulfilled(config) {
@@ -89,7 +89,7 @@ export const rApi = createApiRequest<RApiHConfig, RApiSuccessResponse, RApiFailR
     return response;
   },
   onRejected(err) {
-    return Promise.reject<RApiFailResponse>({
+    return Promise.reject<ApiFailResponse>({
       status: +(err.response?.status ?? 0),
       flag: 'ApiResponseFal',
       data: err.response?.data,
@@ -102,19 +102,12 @@ export const rApi = createApiRequest<RApiHConfig, RApiSuccessResponse, RApiFailR
         response: err.response,
         name: err.name
       }
-    } as RApiFailResponse);
+    } as ApiFailResponse);
   }
 })
 
-export const {
-  apiGet: rApiGet,
-  apiPost: rApiPost,
-  request: rRequest,
-  createApi: rCreateApi
-} = rApi;
+export const apiPut = createApi(REQ_METHODS.PUT);
 
-export const rApiPut = rCreateApi(REQ_METHODS.PUT);
+export const apiDelete = createApi(REQ_METHODS.DELETE);
 
-export const rApiDelete = rCreateApi(REQ_METHODS.DELETE);
-
-export const rApiPatch = rCreateApi('PATCH');
+export const apiPatch = createApi('PATCH');

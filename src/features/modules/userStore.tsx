@@ -1,6 +1,6 @@
 import { loginReq, getUserinfoReq, UserinfoResponse, logoutReq } from '@/api';
 import { useShallowReactive } from '@libs/hooks';
-import { toPicket, asynced, RPromiseLike } from '@suey/pkg-utils';
+import { toPicket, asynced, RPromiseLike, isUnDef } from '@suey/pkg-utils';
 import { useEffect, useLayoutEffect } from 'react';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
@@ -100,6 +100,7 @@ export const useAuthRole = (roleOptions: AuthHasRoleOptions) => {
 export const userLogin = asynced<typeof loginReq>(async (loginPayload) => {
   const [loginErr, loginRes] = await toPicket(loginReq(loginPayload));
   if (loginErr) return Promise.reject(loginErr);
+  if (isUnDef(loginRes?.data?.userinfo?.token)) return Promise.reject(loginErr);
 
   await setAccessToken(loginRes.data.userinfo.token);
   return loginRes;
@@ -116,12 +117,14 @@ export const userUpdateInfo = asynced<typeof getUserinfoReq>(async () => {
 });
 
 /** 用户退出登录 */
-export const useLogout = asynced<() => RPromiseLike<void>>(async () => {
-  const [err, res] = await toPicket(logoutReq());
+export const userLogout = asynced<() => RPromiseLike<void>>(async () => {
+  // const [err, res] = await toPicket(logoutReq());
 
-  if (err) {
-    return Promise.reject();
-  }
+  useUserStore.setState({ accessToken: void 0 });
 
-  return Promise.resolve();
+  // if (err) {
+  //   return Promise.reject();
+  // }
+
+  // return Promise.resolve();
 })

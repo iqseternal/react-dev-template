@@ -1,7 +1,7 @@
 import { isClass, isFunction, isObject } from '@suey/pkg-utils';
 import type { ClassType, Component, FC, ForwardRefExoticComponent, LazyExoticComponent } from 'react';
 /**
- * 合并多个classname类名,
+ * 合并多个className类名,
  * @example
  * ``` tsx
  * <div
